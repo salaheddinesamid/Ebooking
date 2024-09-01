@@ -188,8 +188,13 @@ export function Home() {
                 <hr />
                 <div className="row">
                     {filteredListing.map((list) => (
-                        <div className="col-md-4 d-flex align-items-stretch" key={list.id} style={{ opacity: userAuthenticated ? "1" : "0.3" }}>
-                            <div className="card mb-4" style={{ flex: 1 }}>
+                        <div className="col-md-4 d-flex align-items-stretch" key={list.id} style={{ opacity: userAuthenticated ? "1" : "0.3",
+                           
+                         }}>
+                            <div className="card mb-4" style={{ flex: 1,
+                                 borderRadius:10,
+                                 boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+                             }}>
                                 <img
                                     src={`${list.image}`}
                                     className="card-img-top"
