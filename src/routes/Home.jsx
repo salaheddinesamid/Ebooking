@@ -1,103 +1,32 @@
 import React, { useEffect, useState } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
+import { Rating } from "@mui/material";
 import { Footer } from "../Components/Footer";
+import { Header } from "../Components/Header";
 
 export function Home() {
-    // Initialize states with values from localStorage
-    const [userAuthenticated, setUserAuthenticated] = useState(localStorage.getItem("authenticated"));
+    const [userAuthenticated, setUserAuthenticated] = useState(localStorage.getItem("authenticated") === "true");
     const [token, setToken] = useState(localStorage.getItem("accessToken"));
     const [searchClicked, setSearchClicked] = useState(localStorage.getItem("searchClicked") === "true");
+    const [isLoginVisible, setIsLoginVisible] = useState(!userAuthenticated);
+    
+    
+    // Show login if not authenticated
     const navigate = useNavigate();
-
-    // Header component with a responsive navbar
-    function Header() {
-        const [isLoginVisible, setIsLoginVisible] = useState(false);
-        const navigate = useNavigate();
-        const [email, setEmail] = useState("");
-        const [password, setPassword] = useState("");
-
-        // Sync state with localStorage on component mount
-        useEffect(() => {
-            const storedValue = localStorage.getItem("loginClicked") === "true";
-            const authenticated = localStorage.getItem("authenticated");
-            const token = localStorage.getItem("accessToken");
-            const search = localStorage.getItem("searchClicked") === "true";
-            setIsLoginVisible(storedValue);
-            setUserAuthenticated(authenticated);
-            setToken(token);
-            setSearchClicked(search);
-        }, []);
-
-        const handleLoginClick = async () => {
-            const newValue = !isLoginVisible;
-            setIsLoginVisible(newValue);
-            localStorage.setItem("loginClicked", newValue.toString());
-            try {
-                const response = await axios.post('http://localhost:8080/api/user/authentication', { email, password }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': "http://localhost:3000"
-                    }
-                });
-                localStorage.setItem('accessToken', response.data.accessToken);
-                if (localStorage.getItem("accessToken") !== "null") {
-                    localStorage.setItem("authenticated", true);
-                    setUserAuthenticated(true);
-                } else {
-                    throw new Error('Authentication failed');
-                }
-            } catch (error) {
-                setEmail("");
-                setPassword("");
-            }
-        };
-
-        function handleCircleIcon() {
-            // Handle circle icon click event
-        }
-
-        return (
-            <header>
-                <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    <div className="container">
-                        <a className="navbar-brand" href="#" style={{ fontWeight: "bold" }}>EBooking</a>
-                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span className="navbar-toggler-icon"></span>
-                        </button>
-                        <div className="collapse navbar-collapse" id="navbarNav">
-                            {!userAuthenticated ? (
-                                <ul className="navbar-nav ms-auto">
-                                    <li className="nav-item">
-                                        <button className="btn btn-outline-primary me-2" onClick={() => navigate("/registration")}>Sign up</button>
-                                    </li>
-                                    <li className="nav-item">
-                                        <button className="btn btn-primary" onClick={handleLoginClick}>Log in</button>
-                                    </li>
-                                </ul>
-                            ) : ""}
-                            {isLoginVisible && (
-                                <div className="col-3">
-                                    <input type="text" placeholder="Username" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                    <input type="password" placeholder="Password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} />
-                                    <button className="btn btn-light" onClick={handleLoginClick}>Log in</button>
-                                </div>
-                            )}
-                        </div>
-                        <div className="align-items-center" style={{ padding: 10, marginLeft: 10 }}>
-                            <button className="btn btn-light" onClick={handleCircleIcon}><AccountCircleIcon /></button>
-                        </div>
-                    </div>
-                </nav>
-            </header>
-        );
-    }
-
-    // Hero section component for visual appeal
+    
+    useEffect(() => {
+        const authenticated = localStorage.getItem("authenticated") === "true";
+        const token = localStorage.getItem("accessToken");
+        const search = localStorage.getItem("searchClicked") === "true";
+        setUserAuthenticated(authenticated);
+        setToken(token);
+        setSearchClicked(search);
+    }, []);
     function HeroSection() {
         return (
             <section className="hero-section bg-primary text-white text-center py-5">
@@ -113,11 +42,14 @@ export function Home() {
     function Listing() {
         const [listings, setListings] = useState([]);
         const [propertyType, setPropertyType] = useState("All");
-        const [destination,setDestination] = useState("World");
-        const [maxGuests,setMaxGuests] = useState(0)
-        const filteredListing = listings.filter(list => propertyType === "All" || list.property.propertyType === propertyType)
-                                  .filter(list=> destination === "World" || destination === "" ||list.property.location.country.countryCode === destination || list.property.location.city.cityName === destination)
-                                  .filter(list=> maxGuests === 0 || list == null || maxGuests == list.maxGuests)
+        const [destination, setDestination] = useState("World");
+        const [maxGuests, setMaxGuests] = useState(0);
+
+        const filteredListing = listings
+            .filter(list => propertyType === "All" || list.property.propertyType === propertyType)
+            .filter(list => destination === "World" || destination === "" || list.property.location.country.countryCode === destination || list.property.location.city.cityName === destination)
+            .filter(list => maxGuests === 0 || list == null || maxGuests == list.maxGuests);
+
         const [typeListing, setTypeListing] = useState([
             { "id": 1, "type": "All" },
             { "id": 2, "type": "Villa" },
@@ -127,11 +59,7 @@ export function Home() {
         ]);
 
         useEffect(() => {
-            axios.get("http://localhost:8080/api/listing", {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            })
+            axios.get("http://localhost:8080/api/listing")
                 .then(res => {
                     console.log('Fetched listings:', res.data); // Debugging line
                     setListings(res.data);
@@ -145,9 +73,9 @@ export function Home() {
             localStorage.setItem('searchClicked', newValue.toString());
         };
 
-        function handleListingNavigate(id){
-            localStorage.setItem("navigateListing",id);
-            navigate(`/listing/${id}`)
+        function handleListingNavigate(id) {
+            localStorage.setItem("targetListing",id);
+            navigate(`/listing/${id}`);
         }
 
         return (
@@ -162,25 +90,21 @@ export function Home() {
                         <SearchIcon onClick={handleSearchClick} />
                     </div>
                     {searchClicked && (
-                        <div className="col-12 d-flex" style={{
-                            marginTop:"50px"
-                        }}>
+                        <div className="col-12 d-flex" style={{ marginTop: "50px" }}>
                             <div className="col-xl-4 me-1">
                                 <p><b>Destination:</b></p>
-                                <input type="text" placeholder="Country,City,State..." className="form-control" value={destination} onChange={(e)=>setDestination(e.target.value)} />
+                                <input type="text" placeholder="Country, City, State..." className="form-control" value={destination} onChange={(e) => setDestination(e.target.value)} />
                             </div>
                             <div className="col-xl-3 me-1">
                                 <p><b>Max guests:</b></p>
-                                <input type="number" placeholder="Max guests..." className="form-control" value={maxGuests} onChange={(e)=>{
-                                    setMaxGuests(e.target.value)
-                                }} />
+                                <input type="number" placeholder="Max guests..." className="form-control" value={maxGuests} onChange={(e) => setMaxGuests(e.target.value)} />
                             </div>
                             <div className="col-xl-3 me-1">
                                 <p><b>Max Price:</b></p>
                                 <input type="text" placeholder="Max price..." className="form-control" />
                             </div>
                             <div className="col-xl-1">
-                                <button className="btn btn-danger" onClick={handleSearchClick}><CloseIcon/></button>
+                                <button className="btn btn-danger" onClick={handleSearchClick}><CloseIcon /></button>
                             </div>
                         </div>
                     )}
@@ -188,20 +112,19 @@ export function Home() {
                 <hr />
                 <div className="row">
                     {filteredListing.map((list) => (
-                        <div className="col-md-4 d-flex align-items-stretch" key={list.id} style={{ opacity: userAuthenticated ? "1" : "0.3",
-                           
-                         }}>
-                            <div className="card mb-4" style={{ flex: 1,
-                                 borderRadius:10,
-                                 boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
-                             }}>
+                        <div className="col-md-4 d-flex align-items-stretch" key={list.id} style={{ opacity: userAuthenticated ? "1" : "0.3" }}>
+                            <div className="card mb-4" style={{
+                                flex: 1,
+                                borderRadius: 10,
+                                boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
+                            }}>
                                 <img
                                     src={`${list.image}`}
                                     className="card-img-top"
                                     alt={list.title || 'Listing'}
                                     style={{
-                                        height: "200px",  // Fixed height for all images
-                                        objectFit: "cover"  // Ensures image covers the area
+                                        height: "200px", // Fixed height for all images
+                                        objectFit: "cover" // Ensures image covers the area
                                     }}
                                 />
                                 <div className="card-body d-flex flex-column">
@@ -219,8 +142,11 @@ export function Home() {
                                     <p className="card-text">
                                         <strong>Max Guests:</strong> {list.maxGuests}
                                     </p>
+                                    <div className="card-text">
+                                        <Rating name="read-only" defaultValue={list.stars} readOnly />
+                                    </div>
                                     <div className="mt-auto">
-                                        <a className="btn btn-primary" onClick={()=>handleListingNavigate(list.id)}>View Details</a>
+                                        <a className="btn btn-primary" onClick={() => handleListingNavigate(list.id)}>View Details</a>
                                     </div>
                                 </div>
                             </div>
@@ -229,17 +155,14 @@ export function Home() {
                 </div>
             </div>
         );
-    }
-
-    // Footer component with a simple layout
-    
+    };
 
     return (
         <div>
-            <Header />
+            <Header/>
             <HeroSection />
             <Listing />
-            <Footer/>
+            <Footer />
         </div>
     );
 }
