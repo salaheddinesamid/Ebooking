@@ -13,13 +13,18 @@ function App() {
   const [listingId, setListingId] = useState(localStorage.getItem("navigateListing"));
   const [token, setToken] = useState(localStorage.getItem("accessToken"));
   const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem("authenticated") === "true");
+  //localStorage.setItem("loginClicked",false);
 
   useEffect(() => {
     const Expiration =() => {
       localStorage.setItem("authenticated",false)
-      localStorage.setItem("accessToken",null)
+      localStorage.setItem("accessToken",null);
+      localStorage.setItem("user",null);
     }
-    const intervalId = setInterval(Expiration, 36000000);
+    if(!isAuthenticated){
+      localStorage.setItem("authenticated",false)
+    }
+    const intervalId = setInterval(Expiration, 1000000);
 
     // Clear interval on component unmount
     return () => clearInterval(intervalId);

@@ -2,11 +2,12 @@ import axios from "axios";
 import React, { useState} from "react";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from "react-router-dom";
+import HouseboatIcon from '@mui/icons-material/Houseboat';
 
 export function Header() {
     const navigate = useNavigate();
     const [userAuthenticated, setUserAuthenticated] = useState(localStorage.getItem("authenticated") === "true");
-    const [isLoginVisible, setIsLoginVisible] = useState(!userAuthenticated);
+    const [isLoginVisible, setIsLoginVisible] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [user,setUser] = useState(JSON.parse(localStorage.getItem("user")))
@@ -41,7 +42,7 @@ export function Header() {
         <header>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <div className="container">
-                    <a className="navbar-brand" href="http://localhost:3000/" style={{ fontWeight: "bold" }}>EBooking</a>
+                    <a className="navbar-brand" href="http://localhost:3000/" style={{ fontWeight: "bold" }}><HouseboatIcon/> EBooking</a>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -49,17 +50,27 @@ export function Header() {
                         {!userAuthenticated ? (
                             <ul className="navbar-nav ms-auto">
                                 <li className="nav-item">
-                                    <button className="btn btn-outline-primary me-2" onClick={() => navigate("/registration")}>Sign up</button>
+                                    <button className="btn me-2" onClick={() => navigate("/registration")}style={{
+                                        border:"1px solid #ff385c",
+                                        backgroundColor: "white",
+                                        color:"#ff385c"
+                                    }}>Sign up</button>
                                 </li>
                                 <li className="nav-item">
-                                    <button className="btn btn-primary" onClick={handleLoginClick}>Log in</button>
+                                    <button className="btn" onClick={handleLoginClick} style={{
+                                        backgroundColor: "#ff385c",
+                                        color:"white"
+                                    }}>Log in</button>
                                 </li>
                             </ul>
                         ) : (
                             // Show other options when user is authenticated
                             <ul className="navbar-nav ms-auto">
                                 <li className="nav-item">
-                                    <button className="btn btn-primary" onClick={() => navigate("/profile")}>Profile</button>
+                                    <button className="btn" onClick={() => navigate("/profile")} style={{
+                                        backgroundColor: "#ff385c",
+                                        color:"white"
+                                    }}>Profile</button>
                                 </li>
                             </ul>
                         )}

@@ -29,11 +29,13 @@ export function Home() {
     }, []);
     function HeroSection() {
         return (
-            <section className="hero-section bg-primary text-white text-center py-5">
+            <section className="hero-section text-white text-center py-5" style={{
+                backgroundColor: "#ff385c"
+            }}>
                 <div className="container">
                     <h1 className="display-4">Find Your Perfect Stay</h1>
                     <p className="lead">Explore top-rated accommodations and book your next adventure with EBooking.</p>
-                    <button className="btn btn-light btn-lg"><a href="#listing" style={{ textDecoration: "none" }}> Explore Now</a></button>
+                    <button className="btn"><a href="#listing" style={{ textDecoration: "none",color:"white" }}> Explore Now</a></button>
                 </div>
             </section>
         );
@@ -44,11 +46,13 @@ export function Home() {
         const [propertyType, setPropertyType] = useState("All");
         const [destination, setDestination] = useState("World");
         const [maxGuests, setMaxGuests] = useState(0);
+        const [maxPrice,setMaxPrice] = useState(0);
 
         const filteredListing = listings
             .filter(list => propertyType === "All" || list.property.propertyType === propertyType)
             .filter(list => destination === "World" || destination === "" || list.property.location.country.countryCode === destination || list.property.location.city.cityName === destination)
-            .filter(list => maxGuests === 0 || list == null || maxGuests == list.maxGuests);
+            .filter(list => maxGuests === 0 || list == null || maxGuests <= list.maxGuests)
+            .filter(list=> maxPrice === 0 || maxPrice <= list.price)
 
         const [typeListing, setTypeListing] = useState([
             { "id": 1, "type": "All" },
@@ -80,17 +84,8 @@ export function Home() {
 
         return (
             <div className="container mt-4" id="listing">
-                <div className="row d-flex align-items-center">
-                    {typeListing.map((type) => (
-                        <div className="col-xl-2" key={type.id}>
-                            <p style={{ cursor: "pointer" }} onClick={() => setPropertyType(type.type)}>{type.type}</p>
-                        </div>
-                    ))}
-                    <div className="col-xl-2">
-                        <SearchIcon onClick={handleSearchClick} />
-                    </div>
-                    {searchClicked && (
-                        <div className="col-12 d-flex" style={{ marginTop: "50px" }}>
+                <div className="row d-flex align-items-center justify-content-center">
+                        <div className="col-12 d-flex justify-content-center" style={{ marginTop: "50px" }}>
                             <div className="col-xl-4 me-1">
                                 <p><b>Destination:</b></p>
                                 <input type="text" placeholder="Country, City, State..." className="form-control" value={destination} onChange={(e) => setDestination(e.target.value)} />
@@ -101,13 +96,9 @@ export function Home() {
                             </div>
                             <div className="col-xl-3 me-1">
                                 <p><b>Max Price:</b></p>
-                                <input type="text" placeholder="Max price..." className="form-control" />
-                            </div>
-                            <div className="col-xl-1">
-                                <button className="btn btn-danger" onClick={handleSearchClick}><CloseIcon /></button>
+                                <input type="text" placeholder="Max price..." className="form-control" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} />
                             </div>
                         </div>
-                    )}
                 </div>
                 <hr />
                 <div className="row">
@@ -146,7 +137,10 @@ export function Home() {
                                         <Rating name="read-only" defaultValue={list.stars} readOnly />
                                     </div>
                                     <div className="mt-auto">
-                                        <a className="btn btn-primary" onClick={() => handleListingNavigate(list.id)}>View Details</a>
+                                        <a className="btn" onClick={() => handleListingNavigate(list.id)} style={{
+                                        backgroundColor: "#ff385c",
+                                        color:"white"
+                                    }}>View Details</a>
                                     </div>
                                 </div>
                             </div>

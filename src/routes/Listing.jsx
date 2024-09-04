@@ -8,6 +8,8 @@ import { Rating } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "../Components/Header";
 import CircularProgress from '@mui/material/CircularProgress';
+import SendIcon from '@mui/icons-material/Send';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
 export function Listing() {
     const [listing, setListing] = useState(null);
@@ -18,7 +20,7 @@ export function Listing() {
     const { id } = useParams(); 
     const listingId = localStorage.getItem("targetListing") // Get the listing ID from the URL
     const navigate = useNavigate();
-    const [user,setUser] = useState(localStorage.getItem("user"))
+    const [user,setUser] = useState(JSON.parse(localStorage.getItem("user")))
 
     useEffect(() => {
         const fetchListingDetails = async () => {
@@ -83,12 +85,14 @@ export function Listing() {
                     <h2 className="mb-0">{`Explore ${listing.description}`}</h2>
                 </div>
                 <div className="col-xl-4 col-md-4 col-sm-12 d-flex justify-content-lg-end justify-content-md-end justify-content-sm-start mt-sm-2 mt-md-0">
-                    <button className="btn btn-outline-primary me-2 d-flex align-items-center" style={{ border: "none" }}>
-                        <SaveIcon /> <b>Save</b>
-                    </button>
-                    <button className="btn btn-outline-secondary d-flex align-items-center" style={{ border: "none" }}>
-                        <IosShareIcon /> <b>Share</b>
-                    </button>
+                       <p style={{
+                        textDecoration:"underline",
+                        marginRight:"10px"
+                       }}>Save <SaveAltIcon/></p>
+                    <p style={{
+                        textDecoration:"underline",
+                        marginLeft:"10px"
+                       }}>Share <SendIcon/> </p>
                 </div>
             </div>
             <div className="row mt-4 mb-3 container justify-content-center">
@@ -166,15 +170,13 @@ const Booking = ({ listing, user }) => {
     };
 
     const handleBookingNavigate = () => {
-        const booking = {
-            userId: user.id,
-            total: totalAfterTax,
-            listingInformation: {
-                name: listing.description
-            },
+        let booking = {
+            guestId: user.id,
+            listingId:listing.id,
+            amount:totalAfterTax,
+            checkInDate:fromDate,
+            checkOutDate:toDate,
             totalNights: nights,
-            fromDate: fromDate,
-            toDate: toDate
         };
         localStorage.setItem("booking", JSON.stringify(booking));
         navigate(`/booking/${listing.id}`);

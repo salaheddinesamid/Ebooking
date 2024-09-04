@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from "react-router-dom";
+import { Header } from "../Components/Header";
 
 function SignUp() {
     // State to hold form inputs and feedback
@@ -55,6 +56,8 @@ function SignUp() {
     };
 
     return (
+        <div className="row">
+            <Header/>
         <div className="container">
             <h2 className="text-center my-4">Sign Up</h2>
             <form onSubmit={handleSubmit} className="col-md-6 offset-md-3">
@@ -121,7 +124,9 @@ function SignUp() {
                 </div>
             </form>
         </div>
+    </div>
     );
+    
 }
 
 export default SignUp;
