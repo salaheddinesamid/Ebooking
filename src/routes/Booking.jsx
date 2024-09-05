@@ -66,10 +66,10 @@ export function Booking({listingId}){
                         <h2><button className="btn btn-light" onClick={handleBackClick}><ArrowBackIcon/></button>Your Reservation:</h2>
                 </div>
                 <div className="row">
-                    <p><b>Description:</b> {booking.listingInformation?.name},{targetListing.property?.location?.city?.cityName}</p>
+                    <p><b>Description:</b> {booking.description},{targetListing.property?.location?.city?.cityName}</p>
                 </div>
                 <div className="row">
-                    <p><b>Destination:</b> {booking.listingInformation?.destination?.city?.cityName},{booking.listingInformation?.destination?.country?.countryCode}</p>
+                    <p><b>Destination:</b> {booking.destination?.city.cityName},{booking.destination?.country.countryCode}</p>
                 </div>
                 <div className="row">
                     <PaymentMethod/>

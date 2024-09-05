@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Rating } from "@mui/material";
 import { Footer } from "../Components/Footer";
 import { Header } from "../Components/Header";
+import StarIcon from '@mui/icons-material/Star';
 
 export function Home() {
     const [userAuthenticated, setUserAuthenticated] = useState(localStorage.getItem("authenticated") === "true");
@@ -83,7 +84,7 @@ export function Home() {
         }
 
         return (
-            <div className="container mt-4" id="listing">
+            <div className="mt-4 pe-3 ps-3" id="listing">
                 <div className="row d-flex align-items-center justify-content-center">
                         <div className="col-12 d-flex justify-content-center" style={{ marginTop: "50px" }}>
                             <div className="col-xl-4 me-1">
@@ -103,46 +104,33 @@ export function Home() {
                 <hr />
                 <div className="row">
                     {filteredListing.map((list) => (
-                        <div className="col-md-4 d-flex align-items-stretch" key={list.id} style={{ opacity: userAuthenticated ? "1" : "0.3" }}>
-                            <div className="card mb-4" style={{
-                                flex: 1,
-                                borderRadius: 10,
-                                boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"
-                            }}>
-                                <img
-                                    src={`${list.image}`}
-                                    className="card-img-top"
-                                    alt={list.title || 'Listing'}
-                                    style={{
-                                        height: "200px", // Fixed height for all images
-                                        objectFit: "cover" // Ensures image covers the area
-                                    }}
-                                />
-                                <div className="card-body d-flex flex-column">
-                                    <h5 className="card-title">{list.title}</h5>
-                                    <p className="card-text">{list.description}</p>
-                                    <p className="card-text">
-                                        <strong>Location:</strong> {list.property.location.city.cityName}, {list.property.location.country.countryCode}
-                                    </p>
-                                    <p className="card-text">
-                                        <strong>Property Type:</strong> {list.property.propertyType}
-                                    </p>
-                                    <p className="card-text">
-                                        <strong>Price:</strong> ${list.price} per night
-                                    </p>
-                                    <p className="card-text">
-                                        <strong>Max Guests:</strong> {list.maxGuests}
-                                    </p>
-                                    <div className="card-text">
-                                        <Rating name="read-only" defaultValue={list.stars} readOnly />
-                                    </div>
-                                    <div className="mt-auto">
-                                        <a className="btn" onClick={() => handleListingNavigate(list.id)} style={{
-                                        backgroundColor: "#ff385c",
-                                        color:"white"
-                                    }}>View Details</a>
-                                    </div>
+                        <div className="col-xl-2" style={{
+                            maxHeight:'fit-content',
+                            borderRadius:10,
+                            margin:10,
+                            cursor:"pointer"
+                        }}onClick={() => handleListingNavigate(list.id)}>
+                            <div className="row" >
+                                <img src={list.image} alt="" style={{
+                            height:'200px',
+                            borderRadius:10
+                        }}/>
+                            </div>
+                            <div className="row d-flex align-items-center">
+                                <div className="col-xl-9">
+                                   <p><b>{list.property?.location?.city?.cityName},{list.property?.location?.country?.countryCode}</b></p>
                                 </div>
+                                <div className="col-xl-3">
+                                   <p style={{
+                                    fontSize:'15px'
+                                   }}><StarIcon fontSize="15px"/>{list.stars}</p>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <p>{list.description}</p>
+                            </div>
+                            <div className="row justify-content-end">
+                                <p>{list.price}$ per night</p>
                             </div>
                         </div>
                     ))}
@@ -154,9 +142,15 @@ export function Home() {
     return (
         <div>
             <Header/>
+            <div className="row">
             <HeroSection />
-            <Listing />
-            <Footer />
+            </div>
+            <div className="row mb-4 mt-4">
+               <Listing />
+            </div>
+            <div className="row">
+              <Footer />
+            </div>
         </div>
     );
 }

@@ -17,7 +17,7 @@ export function Listing() {
     const [amenities, setAmenities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [token] = useState(localStorage.getItem("accessToken"));
-    const { id } = useParams(); 
+    const [host,setHost] = useState({})
     const listingId = localStorage.getItem("targetListing") // Get the listing ID from the URL
     const navigate = useNavigate();
     const [user,setUser] = useState(JSON.parse(localStorage.getItem("user")))
@@ -31,6 +31,8 @@ export function Listing() {
                         "Authorization": `Bearer ${token}`,
                     },
                 });
+                const fetchHost = await axios.get(`http://localhost:8080/api/host/${listingId}`)
+                setHost(fetchHost.data)
                 setListing(response.data);
                 setLoading(false);
             } catch (error) {
@@ -101,7 +103,7 @@ export function Listing() {
             <div className="row" style={{ marginTop: "100px" }}>
                 <div className="col-xl-9">
                     <div className="row">
-                        <p><b>Host:</b> {listing.host?.user?.fullName}</p>
+                        <p><b>Host:</b> {host.user?.fullName}</p>
                         <p><b>Address:</b> {listing.property?.location?.city?.cityName}, {listing.property?.location?.country?.countryCode}</p>
                     </div>
                     <hr />
@@ -173,10 +175,15 @@ const Booking = ({ listing, user }) => {
         let booking = {
             guestId: user.id,
             listingId:listing.id,
+            description : listing.description,
             amount:totalAfterTax,
             checkInDate:fromDate,
             checkOutDate:toDate,
             totalNights: nights,
+            destination : {
+                country : listing.property.location.country,
+                city : listing.property.location.city
+            }
         };
         localStorage.setItem("booking", JSON.stringify(booking));
         navigate(`/booking/${listing.id}`);

@@ -3,6 +3,7 @@ import React, { useState} from "react";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from "react-router-dom";
 import HouseboatIcon from '@mui/icons-material/Houseboat';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export function Header() {
     const navigate = useNavigate();
@@ -63,17 +64,7 @@ export function Header() {
                                     }}>Log in</button>
                                 </li>
                             </ul>
-                        ) : (
-                            // Show other options when user is authenticated
-                            <ul className="navbar-nav ms-auto">
-                                <li className="nav-item">
-                                    <button className="btn" onClick={() => navigate("/profile")} style={{
-                                        backgroundColor: "#ff385c",
-                                        color:"white"
-                                    }}>Profile</button>
-                                </li>
-                            </ul>
-                        )}
+                        ) : ''}
                         {isLoginVisible && (
 <div className="col-3">
     <input
@@ -102,6 +93,9 @@ export function Header() {
                                 borderRadius:100
                              }}/> : <AccountCircleIcon/>
                             }</button>
+                    </div>
+                    <div className="row">
+                        <button className="btn"><LogoutIcon/></button>
                     </div>
                 </div>
             </nav>
