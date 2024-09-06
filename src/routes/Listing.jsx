@@ -241,7 +241,7 @@ const Booking = ({ listing, user }) => {
             <div className="row">
                 <div className="col-xl-12">
                     <label htmlFor="nights">Total nights:</label>
-                    <input type="number" id="nights" value={nights} onChange={handleNightsChange} className="form-control" />
+                    <input type="number" id="nights" value={nights} className="form-control" />
                 </div>
             </div>
             <div className="row mt-4">

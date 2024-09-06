@@ -104,7 +104,7 @@ export function Home() {
                 <hr />
                 <div className="row">
                     {filteredListing.map((list) => (
-                        <div className="col-xl-2" style={{
+                        <div className="col" style={{
                             maxHeight:'fit-content',
                             borderRadius:10,
                             margin:10,
