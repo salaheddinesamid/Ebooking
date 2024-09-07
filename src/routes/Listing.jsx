@@ -10,6 +10,7 @@ import { Header } from "../Components/Header";
 import CircularProgress from '@mui/material/CircularProgress';
 import SendIcon from '@mui/icons-material/Send';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import {Riple} from "react-loading-indicators"
 
 export function Listing() {
     const [listing, setListing] = useState(null);
@@ -71,7 +72,7 @@ export function Listing() {
     if (loading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <CircularProgress />
+                <Riple color="#ff385c" size="medium" text="" textColor="" />
             </div>
         );
     }

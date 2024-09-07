@@ -9,12 +9,14 @@ import { Rating } from "@mui/material";
 import { Footer } from "../Components/Footer";
 import { Header } from "../Components/Header";
 import StarIcon from '@mui/icons-material/Star';
+import { Riple } from "react-loading-indicators";
 
 export function Home() {
     const [userAuthenticated, setUserAuthenticated] = useState(localStorage.getItem("authenticated") === "true");
     const [token, setToken] = useState(localStorage.getItem("accessToken"));
     const [searchClicked, setSearchClicked] = useState(localStorage.getItem("searchClicked") === "true");
     const [isLoginVisible, setIsLoginVisible] = useState(!userAuthenticated);
+    
     
     
     // Show login if not authenticated
@@ -27,6 +29,7 @@ export function Home() {
         setUserAuthenticated(authenticated);
         setToken(token);
         setSearchClicked(search);
+        
     }, []);
     function HeroSection() {
         return (
@@ -48,6 +51,8 @@ export function Home() {
         const [destination, setDestination] = useState("World");
         const [maxGuests, setMaxGuests] = useState(0);
         const [maxPrice,setMaxPrice] = useState(0);
+        const [loading, setLoading] = useState(true);
+        
 
         const filteredListing = listings
             .filter(list => propertyType === "All" || list.property.propertyType === propertyType)
@@ -68,9 +73,10 @@ export function Home() {
                 .then(res => {
                     console.log('Fetched listings:', res.data); // Debugging line
                     setListings(res.data);
+                    setLoading(false)
                 })
                 .catch(error => console.error("Error fetching listings:", error));
-        }, [token]);
+        }, []);
 
         const handleSearchClick = () => {
             const newValue = !searchClicked;
@@ -102,11 +108,13 @@ export function Home() {
                         </div>
                 </div>
                 <hr />
-                <div className="row">
+                <div className="row d-flex justify-content-center" style={{
+                    padding:20
+                }}>
                     {filteredListing.map((list) => (
-                        <div className="col" style={{
+                        <div className="col col-xl-2" style={{
                             maxHeight:'fit-content',
-                            borderRadius:10,
+                            borderRadius:5,
                             margin:10,
                             cursor:"pointer"
                         }}onClick={() => handleListingNavigate(list.id)}>
@@ -138,7 +146,6 @@ export function Home() {
             </div>
         );
     };
-
     return (
         <div>
             <Header/>
@@ -146,7 +153,7 @@ export function Home() {
             <HeroSection />
             </div>
             <div className="row mb-4 mt-4">
-               <Listing />
+               <Listing/>
             </div>
             <div className="row">
               <Footer />

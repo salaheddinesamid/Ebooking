@@ -7,12 +7,21 @@ import { DatePicker } from '@mui/x-date-pickers';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from "react-router-dom";
 import { Header } from "../Components/Header";
+import CircularProgress from '@mui/material/CircularProgress';
 
 export function Booking({listingId}){
     //const [listing,setListing] = useState({});
     const targetListing = JSON.parse(localStorage.getItem("targetListing"));
     const [booking,setBooking] = useState(JSON.parse(localStorage.getItem("booking")));
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    if (!booking) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress/>
+            </div>
+        );
+    }
     function PaymentMethod(){
         const paymentMethods = [{
             "id":1,
