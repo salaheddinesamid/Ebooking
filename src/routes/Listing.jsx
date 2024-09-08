@@ -1,16 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import IosShareIcon from '@mui/icons-material/IosShare';
-import SaveIcon from '@mui/icons-material/Save';
 import { Footer } from "../Components/Footer";
 import { Rating } from "@mui/material";
-import { useParams, useNavigate } from "react-router-dom";
 import { Header } from "../Components/Header";
-import CircularProgress from '@mui/material/CircularProgress';
 import SendIcon from '@mui/icons-material/Send';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import {Riple} from "react-loading-indicators"
+import { useNavigate } from "react-router-dom";
+import { MapChart } from "../Components/MapChart";
 
 export function Listing() {
     const [listing, setListing] = useState(null);
@@ -46,6 +43,7 @@ export function Listing() {
             try {
                 const policiesResponse = await axios.get(`http://localhost:8080/api/policies/${listingId}`);
                 setPolicies(policiesResponse.data);
+                console.log(policiesResponse.data);
             } catch (error) {
                 console.error("Error fetching policies:", error);
             }
@@ -136,14 +134,19 @@ export function Listing() {
                         padding: 20,
                     }}>
                         <h2>Contact the host</h2>
-                        <p><b>Email:</b> {listing.host?.user?.email}</p>
-                        <p><b>Phone:</b> {listing.host?.user?.phone}</p>
+                        <p><b>Email:</b> {host.user?.email}</p>
+                        <p><b>Phone:</b> {host.user?.phone}</p>
                         <button className="btn" style={{ backgroundColor: "#ff385c", color: "white", fontWeight: "bold" }}>Send message</button>
                     </div>
                 </div>
             </div>
-            <div className="container mt-3">
-                <Booking listing={listing} user={user} />
+            <div className="row container mt-3">
+                <div className="col-xl-5">
+                    <Booking listing={listing} user={user}/>
+                </div>
+                <div className="col-xl-6">
+                <MapChart/>
+                </div>
             </div>
         </div>
     );
@@ -221,6 +224,7 @@ const Booking = ({ listing, user }) => {
             boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
             padding: 20,
             width: "400px",
+            opacity : listing.isAvailable ? "1" : "0.3"
         }}>
             <div className="row">
                 <div className="col-xl-12">
@@ -255,7 +259,7 @@ const Booking = ({ listing, user }) => {
                 <p><b>Total after tax: $</b>{totalAfterTax.toFixed(2)}</p>
             </div>
             <div className="row">
-                <button className="btn" style={{ backgroundColor: "#ff385c", color: "white", fontWeight: "bold" }} onClick={handleBookingNavigate}>Book Now</button>
+                <button className="btn" style={{ backgroundColor: "#ff385c", color: "white", fontWeight: "bold" }} onClick={handleBookingNavigate} disabled={!listing.isAvailable}>Book Now</button>
             </div>
         </div>
     );

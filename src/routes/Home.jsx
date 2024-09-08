@@ -3,13 +3,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-import SearchIcon from '@mui/icons-material/Search';
-import CloseIcon from '@mui/icons-material/Close';
-import { Rating } from "@mui/material";
+
 import { Footer } from "../Components/Footer";
 import { Header } from "../Components/Header";
 import StarIcon from '@mui/icons-material/Star';
-import { Riple } from "react-loading-indicators";
 
 export function Home() {
     const [userAuthenticated, setUserAuthenticated] = useState(localStorage.getItem("authenticated") === "true");
@@ -31,6 +28,55 @@ export function Home() {
         setSearchClicked(search);
         
     }, []);
+    function ListingType(){
+        const listingTypes = [
+            {
+                "id" : 1,
+                "name" : "Villa",
+                "icon" : "villa"
+            },
+            {
+                "id" : 2,
+                "name" : "Appartment"
+            },
+            {
+                "id": 3,
+                "name" : "House",
+                "icon" : "house"
+            },
+            {
+                "id" :4,
+                "name" : "Private beach",
+                "icon" : "beach_access"
+            },
+            {
+                "id" :5,
+                "name" : "Amazing view",
+                "icon":""
+            },
+            {
+                "id": 6,
+                "name" : "Yurts",
+                "icon" : ""
+            },
+            {
+                "id" : 7,
+                "name" : "Boats",
+                "icon" : "sailing"
+            }
+        ]
+        return(
+            <div className="row">
+                {
+                    listingTypes.map((type)=>(
+                        <div className="col">
+                            <p className="d-flex align-items-center"><span class="material-symbols-outlined">{type.icon}</span>{type.name}</p>
+                        </div>
+                    ))
+                }
+            </div>
+        )
+    }
     function HeroSection() {
         return (
             <section className="hero-section text-white text-center py-5" style={{
@@ -91,6 +137,9 @@ export function Home() {
 
         return (
             <div className="mt-4 pe-3 ps-3" id="listing">
+                <div className="container">
+                    <ListingType/>
+                </div>
                 <div className="row d-flex align-items-center justify-content-center">
                         <div className="col-12 d-flex justify-content-center" style={{ marginTop: "50px" }}>
                             <div className="col-xl-4 me-1">
@@ -107,7 +156,6 @@ export function Home() {
                             </div>
                         </div>
                 </div>
-                <hr />
                 <div className="row d-flex justify-content-center" style={{
                     padding:20
                 }}>
