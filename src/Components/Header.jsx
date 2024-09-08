@@ -28,6 +28,7 @@ export function Header() {
                 localStorage.setItem("authenticated", "true");
                 setUserAuthenticated(true);
                 setIsLoginVisible(false);
+                window.location.reload(false);
                 console.log(response.data);
                 localStorage.setItem("user",JSON.stringify(response.data.user)) // Hide login form on successful login
             } else {
@@ -39,6 +40,12 @@ export function Header() {
             localStorage.setItem("authenticated", "false");
         }
     };
+    function handleLogOut(){
+        localStorage.setItem("user",null)
+        localStorage.setItem("accessToken",null)
+        localStorage.setItem("authenticated",false)
+        window.location.reload(false);
+    }
     return (
         <header>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -95,7 +102,7 @@ export function Header() {
                             }</button>
                     </div>
                     <div className="row">
-                        <button className="btn"><LogoutIcon/></button>
+                        <button className="btn" onClick={handleLogOut}><LogoutIcon/></button>
                     </div>
                 </div>
             </nav>

@@ -8,6 +8,8 @@ import { Footer } from "../Components/Footer";
 import { Header } from "../Components/Header";
 import StarIcon from '@mui/icons-material/Star';
 
+import "./Home.css"
+
 export function Home() {
     const [userAuthenticated, setUserAuthenticated] = useState(localStorage.getItem("authenticated") === "true");
     const [token, setToken] = useState(localStorage.getItem("accessToken"));
@@ -160,7 +162,7 @@ export function Home() {
                     padding:20
                 }}>
                     {filteredListing.map((list) => (
-                        <div className="col col-xl-2" style={{
+                        <div className="col col-xl-2 listing" style={{
                             maxHeight:'fit-content',
                             borderRadius:5,
                             margin:10,
@@ -170,7 +172,13 @@ export function Home() {
                                 <img src={list.image} alt="" style={{
                             height:'200px',
                             borderRadius:10
-                        }}/>
+                        }}/> 
+                        <span class="material-symbols-outlined" style={{
+                            bottom:"180px",
+                            position:"absolute",
+                            color:"gray",
+                            opacity:"0.5"
+                        }}>favorite</span>
                             </div>
                             <div className="row d-flex align-items-center">
                                 <div className="col-xl-9">
