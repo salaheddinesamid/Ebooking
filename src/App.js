@@ -8,6 +8,7 @@ import SignUp from './routes/SignUp';
 import { Listing } from './routes/Listing';
 import { Booking } from './routes/Booking';
 import axios from 'axios';
+import { ThankYou } from './routes/ThankYou';
 
 function App() {
   const [listingId, setListingId] = useState(localStorage.getItem("navigateListing"));
@@ -38,6 +39,7 @@ function App() {
           <Route path='/registration' element={<SignUp />} />
           <Route path='/listing/:listingId' element={<Listing />} />
           <Route path='/booking/:listingId' element={<Booking />} />
+          <Route path='thankyou' element={<ThankYou />} />
         </Routes>
       </BrowserRouter>
     </div>

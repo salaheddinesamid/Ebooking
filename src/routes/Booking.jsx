@@ -59,7 +59,12 @@ export function Booking({listingId}){
         navigate(`/listing/${targetListing}`)
     }
     function handleConfirmation(){
-        let req = axios.post("http://localhost:8080/api/booking/book",{booking})
+        let req = axios.post("http://localhost:8080/api/booking/book",booking)
+        .then(res=>{
+            if(res.status == 200){
+                navigate('/thankyou')
+            }
+        })
     }
     return(
         <div className="row">
