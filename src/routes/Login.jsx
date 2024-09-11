@@ -14,6 +14,7 @@ export function Login() {
   const [loading, setLoading] = useState(false); // Add loading state
   const [errorMessage, setErrorMessage] = useState(""); // Add error state
   const [userAuthenticated, setUserAuthenticated] = useState(localStorage.getItem("authenticated") === "true");
+  const [currentComponent,setCurrentComponent] = useState("signin");
   const navigate = useNavigate();
 
   const handleLoginClick = async () => {
@@ -52,17 +53,10 @@ export function Login() {
     }
   };
 
-  return (
-    <div className="row login-container">
-      <div className="row align-items-center login-content">
-        <div className="col-xl-7 login-left">
-          <h1 className="display-4 login-title">EBooking</h1>
-          <h2 className="login-subtitle">Find Your Perfect Stay</h2>
-          <img src={world_map} alt="World map" className="world-map" />
-        </div>
-        <div className="col-xl-4 login-right">
-          <div className="login-form-container">
-            <h3 className="text-center">Welcome</h3>
+  function LoginForm(){
+    return(
+      <div className="login-form-container">
+            
             <div className="form-group mt-4">
               <input
                 type="email"
@@ -112,6 +106,40 @@ export function Login() {
               </div>
             </div>
           </div>
+    )
+  }
+
+  function RegisterForm(){
+    return(
+      <div className="row">
+        
+      </div>
+    )
+  }
+
+  return (
+    <div className="row login-container">
+      <div className="row align-items-center login-content">
+        <div className="col-xl-7 login-left">
+          <h1 className="display-4 login-title">EBooking</h1>
+          <h2 className="login-subtitle">Find Your Perfect Stay</h2>
+          <img src={world_map} alt="World map" className="world-map" />
+        </div>
+        <div className="col-xl-4 login-right">
+        <h3 className="text-center">Welcome</h3>
+            <div className="row mt-4 mb-4">
+              <div className="col-xl-6">
+                <button className="btn" onClick={()=>{
+                  setCurrentComponent("signin")
+                }}>Sign in</button>
+              </div>
+              <div className="col-xl-6">
+                <button className="btn" onClick={()=>{
+                  setCurrentComponent()
+                }}>Sign up</button>
+              </div>
+            </div>
+          {currentComponent == "signin" ? <LoginForm/> : <RegisterForm/>}
         </div>
       </div>
     </div>
