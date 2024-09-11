@@ -36,8 +36,9 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Login/>} />
+          
           <Route path='/home' element={<Home />} />
+          <Route path='/' element={<Login/>} />
           <Route path='/registration' element={<SignUp />} />
           <Route path='/listing/:listingId' element={<Listing />} />
           <Route path='/booking/:listingId' element={<Booking />} />
