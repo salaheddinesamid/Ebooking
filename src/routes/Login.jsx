@@ -52,6 +52,7 @@ export function Login() {
       setLoading(false);
     }
   };
+  
 
   function LoginForm(){
     return(
@@ -110,9 +111,92 @@ export function Login() {
   }
 
   function RegisterForm(){
+    const [firstName,setFirstName] = useState("");
+    const [lastName,setLastName] = useState("");
+    const [email,setEmail] = useState("");
+    const [confirmEmail,setConfirmEmail] = useState("");
+    const [password,setPassword] = useState("");
+    const role = "guest"
+    function CheckSignUpForm(){
+      return firstName && lastName && email && email === confirmEmail && password
+    }
+    const HandleSignUp = async ()=>{
+      const response = await axios.post(
+        'http://localhost:8080/api/user/register',
+        {firstName,lastName,email, password,role },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': "http://localhost:3000"
+          }
+        }
+      );
+        localStorage.setItem('accessToken', response.data.accessToken);
+      if (response.data.accessToken) {
+        localStorage.setItem("authenticated", "true");
+        setUserAuthenticated(true);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        navigate("/home");
+      } else {
+        throw new Error('Authentication failed');
+      }
+    }
     return(
       <div className="row">
-        
+        <div className="row">
+          <div className="col-xl-12">
+            <h1 className="text-center">Join us</h1>
+          </div>
+        </div>
+        <div className="row mt-4">
+              <div className="col-xl-6 col-md-12">
+                <button className="btn facebook-btn">
+                  <img src={facebook_logo} alt="Facebook" className="icon" />
+                  Sign up with Facebook
+                </button>
+              </div>
+              <div className="col-xl-6 col-md-12">
+                <button className="btn google-btn">
+                  <img src={googleIcon} alt="Google" className="icon" />
+                  Sign up with Google
+                </button>
+              </div>
+            </div>
+        <div className="row mt-2 mb-2">
+          <div className="col-xl-12">
+             <input type="text" className="form-control" placeholder="First Name" value={firstName} onChange={(e)=>{setFirstName(e.target.value)}} />
+          </div>
+        </div>
+        <div className="row mt-2 mb-2">
+             <div className="col-xl-12">
+                <input type="text" className="form-control"  placeholder="Last Name" value={lastName} onChange={(e)=>{setLastName(e.target.value)}}/>
+             </div>
+          </div>
+        <div className="row mt-2 mb-2">
+          <div className="col-xl-12">
+             <input type="email" className="form-control" placeholder="Email@example.com" value={email} onChange={(e)=>{setEmail(e.target.value)}}/>
+          </div>
+        </div>
+        <div className="row mt-2 mb-2">
+          <div className="col-xl-12">
+             <input type="email" className="form-control" placeholder="e-mail confirmation" value={confirmEmail} onChange={(e)=>{setConfirmEmail(e.target.value)}}/>
+          </div>
+        </div>
+        <div className="row mt-2 mb-2">
+          <div className="col-xl-12">
+             <input type="password" className="form-control" placeholder="Password" />
+          </div>
+        </div>
+        <div className="row mt-2 mb-2">
+          <div className="col-xl-12">
+          <button
+                className="btn btn-primary login-btn"
+                onClick={HandleSignUp}
+              >
+                {loading ? "Joining us..." : "Sign up"}
+              </button>
+          </div>
+        </div>
       </div>
     )
   }
@@ -125,17 +209,23 @@ export function Login() {
           <h2 className="login-subtitle">Find Your Perfect Stay</h2>
           <img src={world_map} alt="World map" className="world-map" />
         </div>
-        <div className="col-xl-4 login-right">
+        <div className="col-xl-4 login-right" style={{
+          height : currentComponent === "signin" ? "60vh" : "80vh"
+        }}>
         <h3 className="text-center">Welcome</h3>
             <div className="row mt-4 mb-4">
-              <div className="col-xl-6">
+              <div className="col-xl-6 text-center">
                 <button className="btn" onClick={()=>{
                   setCurrentComponent("signin")
+                }} style={{
+                  border: currentComponent === "signin" ? "3px solid #ff385c" : "none"
                 }}>Sign in</button>
               </div>
-              <div className="col-xl-6">
+              <div className="col-xl-6 text-center">
                 <button className="btn" onClick={()=>{
-                  setCurrentComponent()
+                  setCurrentComponent("signup")
+                }} style={{
+                  border: currentComponent === "signup" ? "3px solid #ff385c" : "none"
                 }}>Sign up</button>
               </div>
             </div>

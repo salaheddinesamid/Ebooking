@@ -30,10 +30,13 @@
     background-color: white;
     padding: 40px;
     border-radius: 10px;
+    transition: 3s;
+    
   }
   
   .login-form-container {
     text-align: center;
+    
   }
   
   .login-btn {
