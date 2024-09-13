@@ -1,6 +1,7 @@
 import React from "react";
 import jsPDF from "jspdf";
 import QRCode from 'qrcode'; // Import the QRCode library
+import { Header } from "../Components/Header";
 
 export function ThankYou() {
     const booking = JSON.parse(localStorage.getItem("booking"));
@@ -49,9 +50,12 @@ export function ThankYou() {
 
     return (
         <div className="row">
-            <button className="btn btn-light" onClick={MyDocument}>
+            <Header/>
+            <div className="row">
+               <button className="btn btn-light" onClick={MyDocument}>
                 Download booking
-            </button>
+               </button>
+            </div>
         </div>
     );
 }

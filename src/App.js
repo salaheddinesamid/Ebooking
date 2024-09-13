@@ -10,6 +10,7 @@ import { Booking } from './routes/Booking';
 import { ThankYou } from './routes/ThankYou';
 import { Login } from './routes/Login';
 import { HostRequest } from './routes/HostRequest';
+import { Dashboard } from './routes/Dashboard';
 
 function App() {
   const token = localStorage.getItem("accessToken");
@@ -42,6 +43,7 @@ function App() {
           <Route path='/listing/:listingId' element={<Listing />} />
           <Route path='/booking/:listingId' element={<Booking />} />
           <Route path='/become_host/form' element={<HostRequest />} />
+          <Route path='/dashbaord' element={<Dashboard />} />
           <Route path='thankyou' element={<ThankYou />} />
         </Routes>
       </BrowserRouter>

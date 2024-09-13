@@ -159,10 +159,10 @@ export function Listing() {
             </div>
             <div className="row container mt-3">
                 <div className="col-xl-5">
-                    <Booking listing={listing} user={user}/>
+                     <Booking listing={listing} user={user}/>
                 </div>
                 <div className="col-xl-6">
-                <MapChart/>
+                    <MapChart/>
                 </div>
             </div>
         </div>

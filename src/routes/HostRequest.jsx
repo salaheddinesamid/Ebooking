@@ -9,6 +9,7 @@ export function HostRequest(){
     const [email,setEmail] = useState("");
     const [role,setRole] = useState("host");
     const [phone,setPhone] = useState("");
+    const [password,setPassword] = useState("");
     const [fullName,setFullName] = useState(`${firstName} ${lastName}`);
     const [nationalId,setNationalId] = useState("");
 
@@ -21,7 +22,7 @@ export function HostRequest(){
         paragraph.appendChild(content);
         messageDiv.appendChild(paragraph);
         try{
-            let req = axios.post("http://localhost:8080/api/host/request_join",{fullName,email,nationalId,phone,role})
+            let req = axios.post("http://localhost:8080/api/user/register",{fullName,email,nationalId,phone,role,password})
             
         }catch(err){
 
@@ -69,9 +70,14 @@ export function HostRequest(){
                 </div>
                 <div className="row mt-3 mb-3 ps-4 pe-3 justify-content-center">
                     <div className="col-xl-4">
-                        <input type="text" name="" id="" className="form-control" placeholder="Phone number" value={phone} onChange={(e)=>setPhone(e.target.value)}/>
+                        <input type="text" name="" id="" className="form-control" placeholder="password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
                     </div>
                     <div className="col-xl-4">
+                        <input type="text" name="" id="" className="form-control" placeholder="Phone number" value={phone} onChange={(e)=>setPhone(e.target.value)}/>
+                    </div>
+                </div>
+                <div className="row">
+                   <div className="col-xl-3">
                         <button className="btn text-center" style={{
                             color:"white",
                             backgroundColor:"#ff385c"

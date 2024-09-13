@@ -40,7 +40,11 @@ export function Login() {
         localStorage.setItem("authenticated", "true");
         setUserAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        navigate("/home");
+        if(response.data.user.role === "guest"){
+          navigate("/home");
+        } else if(response.data.user.role === "host"){
+          navigate("/dashbaord");
+        }
       } else {
         throw new Error('Authentication failed');
       }
@@ -139,7 +143,7 @@ export function Login() {
         localStorage.setItem("authenticated", "true");
         setUserAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        navigate("/home");
+        
       } else {
         throw new Error('Authentication failed');
       }
