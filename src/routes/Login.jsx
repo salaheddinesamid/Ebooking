@@ -106,6 +106,9 @@ export function Login() {
                 </button>
               </div>
             </div>
+            <div className="row mt-4 mb-3">
+              <a href="http://localhost:3000/become_host/form" style={{textDecoration:"none" ,color:"#ff385c"}}>Become a host?</a>
+            </div>
           </div>
     )
   }
@@ -184,7 +187,7 @@ export function Login() {
         </div>
         <div className="row mt-2 mb-2">
           <div className="col-xl-12">
-             <input type="password" className="form-control" placeholder="Password" />
+             <input type="password" className="form-control" placeholder="Password" value={password} onChange={(e)=>{setPassword(e.target.value)}} />
           </div>
         </div>
         <div className="row mt-2 mb-2">
@@ -205,7 +208,7 @@ export function Login() {
     <div className="row login-container">
       <div className="row align-items-center login-content">
         <div className="col-xl-7 login-left">
-          <h1 className="display-4 login-title">EBooking</h1>
+          <h1 className="display-4 login-title">e-Booking</h1>
           <h2 className="login-subtitle">Find Your Perfect Stay</h2>
           <img src={world_map} alt="World map" className="world-map" />
         </div>

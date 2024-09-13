@@ -12,6 +12,7 @@ import { MapChart } from "../Components/MapChart";
 export function Listing() {
     const [listing, setListing] = useState(null);
     const [policies, setPolicies] = useState([]);
+    const [images,setImages] = useState([]);
     const [amenities, setAmenities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [token] = useState(localStorage.getItem("accessToken"));
@@ -48,6 +49,15 @@ export function Listing() {
                 console.error("Error fetching policies:", error);
             }
         };
+        const fetchImages = async()=>{
+            try {
+                const imageResponse = await axios.get(`http://localhost:8080/api/listing/images/${listingId}`);
+                setImages(imageResponse.data);
+                console.log(imageResponse.data);
+            } catch (error) {
+                console.error("Error fetching policies:", error);
+            }
+        }
 
         const fetchAmenities = async () => {
             try {
@@ -65,6 +75,7 @@ export function Listing() {
         fetchListingDetails();
         fetchPolicies();
         fetchAmenities();
+        fetchImages();
     }, [listingId, token]);  // Dependency array now includes the listing ID
 
     if (loading) {
@@ -97,7 +108,13 @@ export function Listing() {
                 </div>
             </div>
             <div className="row mt-4 mb-3 container justify-content-center">
-                <img src={listing.image} alt={listing.description} style={{ height: "300px", width: "500px", borderRadius: 20 }} />
+                {
+                    images.map((image)=>(
+                        <div className="col mt-4">
+                            <img src={image.url} alt={listing.description} style={{ height: "300px", width: "500px", borderRadius: 20 }} />
+                        </div>
+                    ))
+                }
             </div>
             <div className="row" style={{ marginTop: "100px" }}>
                 <div className="col-xl-9">

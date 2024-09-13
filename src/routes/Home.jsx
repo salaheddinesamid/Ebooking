@@ -11,10 +11,9 @@ import StarIcon from '@mui/icons-material/Star';
 import "./Home.css"
 
 export function Home() {
-    const [userAuthenticated, setUserAuthenticated] = useState(localStorage.getItem("authenticated") === "true");
-    const [token, setToken] = useState(localStorage.getItem("accessToken"));
     const [searchClicked, setSearchClicked] = useState(localStorage.getItem("searchClicked") === "true");
-    const [isLoginVisible, setIsLoginVisible] = useState(!userAuthenticated);
+    //const [isLoginVisible, setIsLoginVisible] = useState(!userAuthenticated);
+    const [images,setImages] = useState([]);
     
     
     
@@ -25,8 +24,16 @@ export function Home() {
         const authenticated = localStorage.getItem("authenticated") === "true";
         const token = localStorage.getItem("accessToken");
         const search = localStorage.getItem("searchClicked") === "true";
-        setUserAuthenticated(authenticated);
-        setToken(token);
+        const fetchImages = async()=>{
+            try {
+                const imageResponse = await axios.get(`http://localhost:8080/api/listing/images`);
+                setImages(imageResponse.data);
+                console.log(imageResponse.data);
+            } catch (error) {
+                console.error("Error fetching policies:", error);
+            }
+        }
+        fetchImages();
         setSearchClicked(search);
         
     }, []);
@@ -124,6 +131,7 @@ export function Home() {
                     setLoading(false)
                 })
                 .catch(error => console.error("Error fetching listings:", error));
+                
         }, []);
 
         const handleSearchClick = () => {
@@ -169,10 +177,19 @@ export function Home() {
                             cursor:"pointer"
                         }}onClick={() => handleListingNavigate(list.id)}>
                             <div className="row" >
-                                <img src={list.image} alt="" style={{
-                            height:'200px',
-                            borderRadius:10
-                        }}/> 
+                            {images
+                                .filter((image) => list.id === image.listing.id)
+                                     .slice(0, 1) // To ensure only one image is displayed
+                                     .map((image) => (
+                                       <img
+                                         src={image.image.url}
+                                         alt=""
+                                         style={{
+                                           height: '200px',
+                                              borderRadius: 10,
+                                         }}
+                                       />
+                                     ))}
                         <span class="material-symbols-outlined" style={{
                             bottom:"180px",
                             position:"absolute",
