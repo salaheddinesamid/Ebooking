@@ -43,7 +43,7 @@ function App() {
           <Route path='/listing/:listingId' element={<Listing />} />
           <Route path='/booking/:listingId' element={<Booking />} />
           <Route path='/become_host/form' element={<HostRequest />} />
-          <Route path='/dashbaord' element={<Dashboard />} />
+          <Route path='/dashboard' element={<Dashboard />} />
           <Route path='thankyou' element={<ThankYou />} />
         </Routes>
       </BrowserRouter>
