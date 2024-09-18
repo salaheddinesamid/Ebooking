@@ -20,6 +20,14 @@ export function GuestBooking() {
         }
     }, []);
 
+    const handleCancel = (id) =>{
+        try{
+            let req = axios.delete(`http://localhost:8080/api/booking/cancel/${id}`)
+        }catch(err){
+            return err;
+        }
+    }
+
     return (
         <div className="row">
             <Header />
@@ -53,7 +61,7 @@ export function GuestBooking() {
                                         </p>
                                     </div>
                                     <div className="col-md-1">
-                                        <button className="btn btn-outline-danger btn-sm">Cancel</button>
+                                        <button className="btn btn-outline-danger btn-sm" onClick={()=>{handleCancel(elem.id)}}>Cancel</button>
                                     </div>
                                 </div>
                             </div>

@@ -61,9 +61,9 @@ export function Booking({listingId}){
     function handleConfirmation(){
         let req = axios.post("http://localhost:8080/api/booking/book",booking)
         .then(res=>{
-            if(res.status == 200){
                 navigate('/thankyou')
-            }
+                localStorage.setItem("booking",JSON.stringify(res.data))
+            
         })
     }
     return(

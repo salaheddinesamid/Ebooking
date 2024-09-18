@@ -5,6 +5,7 @@ import facebook_logo from "../facebook_logo.png";
 import world_map from "../worldmap.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import LoginForm from "../Components/LoginForm";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -54,76 +55,18 @@ export function Login() {
       setLoading(false);
     }
   };
-  
-
-  function LoginForm(){
-    return(
-      <div className="login-form-container">
-            
-            <div className="form-group mt-4">
-              <input
-                type="email"
-                placeholder="Email@example.com"
-                className="form-control"
-                value={email}
-                onChange={(e)=>setEmail(e.target.value)}
-              />
-            </div>
-            <div className="form-group mt-4">
-              <input
-                type="password"
-                placeholder="Password"
-                className="form-control"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                aria-label="Password"
-              />
-            </div>
-            {errorMessage && (
-              <div className="error-message">
-                {errorMessage}
-              </div>
-            )}
-            <div className="d-flex justify-content-center mt-4">
-              <button
-                className="btn btn-primary login-btn"
-                onClick={handleLoginClick}
-                disabled={loading}
-              >
-                {loading ? "Signing in..." : "Sign in"}
-              </button>
-            </div>
-            <div className="row mt-4">
-              <div className="col-xl-6 col-md-12">
-                <button className="btn facebook-btn">
-                  <img src={facebook_logo} alt="Facebook" className="icon" />
-                  Sign in with Facebook
-                </button>
-              </div>
-              <div className="col-xl-6 col-md-12">
-                <button className="btn google-btn">
-                  <img src={googleIcon} alt="Google" className="icon" />
-                  Sign in with Google
-                </button>
-              </div>
-            </div>
-            <div className="row mt-4 mb-3">
-              <a href="http://localhost:3000/become_host/form" style={{textDecoration:"none" ,color:"#ff385c"}}>Become a host?</a>
-            </div>
-          </div>
-    )
-  }
 
   function RegisterForm(){
-    const [registrationForm,setRegistrationForm] = useState({
-      firstName:"",
-      lastName : "",
-      email:"",
-      confirmEmail:"",
-      password:"",
-      role:"host"
-        })
-    const HandleSignUp = async ()=>{
+    const [registrationForm, setRegistrationForm] = useState({
+      firstName: "",
+      lastName: "",
+      email: "",
+      confirmEmail: "",
+      password: "",
+      role: "host"
+    });
+
+    const HandleSignUp = async () => {
       const response = await axios.post(
         'http://localhost:8080/api/user/register',
         JSON.stringify(registrationForm),
@@ -134,20 +77,21 @@ export function Login() {
           }
         }
       );
-        localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('accessToken', response.data.accessToken);
       if (response.data.accessToken) {
         localStorage.setItem("authenticated", "true");
         setUserAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        
       } else {
         throw new Error('Authentication failed');
       }
-    }
+    };
+
     const handleInputChange = (e) => {
       setRegistrationForm({ ...registrationForm, [e.target.name]: e.target.value });
     };
-    return(
+
+    return (
       <div className="row">
         <div className="row">
           <div className="col-xl-12">
@@ -155,57 +99,92 @@ export function Login() {
           </div>
         </div>
         <div className="row mt-4">
-              <div className="col-xl-6 col-md-12">
-                <button className="btn facebook-btn">
-                  <img src={facebook_logo} alt="Facebook" className="icon" />
-                  Sign up with Facebook
-                </button>
-              </div>
-              <div className="col-xl-6 col-md-12">
-                <button className="btn google-btn">
-                  <img src={googleIcon} alt="Google" className="icon" />
-                  Sign up with Google
-                </button>
-              </div>
-            </div>
-        <div className="row mt-2 mb-2">
-          <div className="col-xl-12">
-             <input type="text" className="form-control" placeholder="First Name" value={registrationForm.firstName} onChange={handleInputChange} />
+          <div className="col-xl-6 col-md-12">
+            <button className="btn facebook-btn">
+              <img src={facebook_logo} alt="Facebook" className="icon" />
+              Sign up with Facebook
+            </button>
           </div>
-        </div>
-        <div className="row mt-2 mb-2">
-             <div className="col-xl-12">
-                <input type="text" className="form-control"  placeholder="Last Name" value={registrationForm.lastName} onChange={handleInputChange}/>
-             </div>
-          </div>
-        <div className="row mt-2 mb-2">
-          <div className="col-xl-12">
-             <input type="email" className="form-control" placeholder="Email@example.com" value={registrationForm.email} onChange={handleInputChange}/>
+          <div className="col-xl-6 col-md-12">
+            <button className="btn google-btn">
+              <img src={googleIcon} alt="Google" className="icon" />
+              Sign up with Google
+            </button>
           </div>
         </div>
         <div className="row mt-2 mb-2">
           <div className="col-xl-12">
-             <input type="email" className="form-control" placeholder="e-mail confirmation" value={registrationForm.confirmEmail} onChange={handleInputChange}/>
+            <input
+              type="text"
+              name="firstName"
+              className="form-control"
+              placeholder="First Name"
+              value={registrationForm.firstName}
+              onChange={handleInputChange}
+            />
           </div>
         </div>
         <div className="row mt-2 mb-2">
           <div className="col-xl-12">
-             <input type="password" className="form-control" placeholder="Password" value={password} onChange={(e)=>{setPassword(e.target.value)}} />
+            <input
+              type="text"
+              name="lastName"
+              className="form-control"
+              placeholder="Last Name"
+              value={registrationForm.lastName}
+              onChange={handleInputChange}
+            />
           </div>
         </div>
         <div className="row mt-2 mb-2">
           <div className="col-xl-12">
-          <button
-                className="btn btn-primary login-btn"
-                onClick={HandleSignUp}
-              >
-                {loading ? "Joining us..." : "Sign up"}
-              </button>
+            <input
+              type="email"
+              name="email"
+              className="form-control"
+              placeholder="Email@example.com"
+              value={registrationForm.email}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+        <div className="row mt-2 mb-2">
+          <div className="col-xl-12">
+            <input
+              type="email"
+              name="confirmEmail"
+              className="form-control"
+              placeholder="E-mail Confirmation"
+              value={registrationForm.confirmEmail}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+        <div className="row mt-2 mb-2">
+          <div className="col-xl-12">
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              placeholder="Password"
+              value={registrationForm.password}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+        <div className="row mt-2 mb-2">
+          <div className="col-xl-12">
+            <button
+              className="btn btn-primary login-btn"
+              onClick={HandleSignUp}
+            >
+              {loading ? "Joining us..." : "Sign up"}
+            </button>
           </div>
         </div>
       </div>
-    )
-  }
+    );
+}
 
   return (
     <div className="row login-container">
