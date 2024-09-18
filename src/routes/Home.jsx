@@ -228,6 +228,7 @@ export function Home() {
             <div className="row mb-4 mt-4">
                <Listing/>
             </div>
+            
             <div className="row">
               <Footer />
             </div>

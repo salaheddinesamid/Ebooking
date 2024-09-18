@@ -4,6 +4,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from "react-router-dom";
 import HouseboatIcon from '@mui/icons-material/Houseboat';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MyDropdown from "./DropDown";
 
 export function Header() {
     const navigate = useNavigate();
@@ -27,20 +28,11 @@ export function Header() {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="col" style={{ padding: 10, marginLeft: 10 }}>
-                    {
-                            userAuthenticated === true ? <button className="btn btn-light">{
-                                user !== null && user.profilePicture  ? <img src={user.profilePicture} alt="Image not found" style={{
-                                   width:"50px",
-                                   height:"50px",
-                                   borderRadius:100
-                                }}/> : <AccountCircleIcon/>
-                               }</button> : ""
-                        }
                         
                     </div>
                     <div className="row">
                         {
-                            userAuthenticated === "true" ? <button className="btn" onClick={handleLogOut}><LogoutIcon/></button> : ""
+                            userAuthenticated === "true" ? <MyDropdown/> : ""
                         }
                     </div>
                 </div>

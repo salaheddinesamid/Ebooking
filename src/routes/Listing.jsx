@@ -89,6 +89,111 @@ export function Listing() {
     if (!listing) {
         return <div>Listing not found.</div>;
     }
+    const Booking = ({ listing, user }) => {
+        const [nights, setNights] = useState(1);
+        const [fromDate, setFromDate] = useState(null);
+        const [toDate, setToDate] = useState(null);
+        const navigate = useNavigate();
+    
+        const totalBeforeTax = nights * listing.price;
+        const taxRate = 0.1; // Example tax rate of 10%
+        const taxAmount = totalBeforeTax * taxRate;
+        const totalAfterTax = totalBeforeTax + taxAmount + 20; // $20 additional fee
+    
+        const handleNightsChange = (e) => {
+            setNights(parseInt(e.target.value, 10) || 1);
+        };
+    
+        const handleBookingNavigate = () => {
+            let booking = {
+                guestId: user.id,
+                listingId:listing.id,
+                hostId:host.id,
+                description : listing.description,
+                amount:totalAfterTax,
+                checkInDate:fromDate,
+                checkOutDate:toDate,
+                totalNights: nights,
+                destination : {
+                    country : listing.property.location.country,
+                    city : listing.property.location.city
+                }
+            };
+            localStorage.setItem("booking", JSON.stringify(booking));
+            navigate(`/booking/${listing.id}`);
+        };
+    
+        const handleFromDateChange = (e) => {
+            const date = e.target.value;
+            setFromDate(date);
+            if (toDate) {
+                calculateNights(date, toDate);
+            }
+        };
+    
+        const handleToDateChange = (e) => {
+            const date = e.target.value;
+            setToDate(date);
+            if (fromDate) {
+                calculateNights(fromDate, date);
+            }
+        };
+    
+        const calculateNights = (from, to) => {
+            const fromDate = new Date(from);
+            const toDate = new Date(to);
+            const differenceInTime = toDate - fromDate;
+            const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+            setNights(differenceInDays > 0 ? differenceInDays : 1);
+        };
+    
+        return (
+            <div className="row" style={{
+                maxHeight: "fit-content",
+                borderRadius: 10,
+                boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+                padding: 20,
+                width: "400px",
+                opacity : listing.isAvailable ? "1" : "0.3"
+            }}>
+                <div className="row">
+                    <div className="col-xl-12">
+                        <h3 className="d-inline-block">{listing.price}</h3>
+                        <p className="d-inline-block"> $ per night</p>
+                    </div>
+                </div>
+    
+                <div className="row mt-1 mb-3">
+                    <div className="col-xl-6">
+                        <label htmlFor="fromDate">From:</label>
+                        <input type="date" id="fromDate" className="form-control" onChange={handleFromDateChange} />
+                    </div>
+                    <div className="col-xl-6">
+                        <label htmlFor="toDate">To:</label>
+                        <input type="date" id="toDate" className="form-control" onChange={handleToDateChange} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-xl-12">
+                        <label htmlFor="nights">Total nights:</label>
+                        <input type="number" id="nights" value={nights} className="form-control" />
+                    </div>
+                </div>
+                <div className="row mt-4">
+                    <p><b>Total before tax: $</b>{totalBeforeTax.toFixed(2)}</p>
+                </div>
+                <div className="row">
+                    <p><b>Tax: $</b>{taxAmount.toFixed(2)}</p>
+                </div>
+                <div className="row">
+                    <p><b>Total after tax: $</b>{totalAfterTax.toFixed(2)}</p>
+                </div>
+                <div className="row">
+                    <button className="btn" style={{ backgroundColor: "#ff385c", color: "white", fontWeight: "bold" }} onClick={handleBookingNavigate} disabled={!listing.isAvailable}>Book Now</button>
+                </div>
+            </div>
+        );
+    };    
 
     const DisplayListing = () => (
         <div className="container mt-4">
@@ -175,109 +280,6 @@ export function Listing() {
             <Footer />
         </div>
     );
+    
 }
 
-const Booking = ({ listing, user }) => {
-    const [nights, setNights] = useState(1);
-    const [fromDate, setFromDate] = useState(null);
-    const [toDate, setToDate] = useState(null);
-    const navigate = useNavigate();
-
-    const totalBeforeTax = nights * listing.price;
-    const taxRate = 0.1; // Example tax rate of 10%
-    const taxAmount = totalBeforeTax * taxRate;
-    const totalAfterTax = totalBeforeTax + taxAmount + 20; // $20 additional fee
-
-    const handleNightsChange = (e) => {
-        setNights(parseInt(e.target.value, 10) || 1);
-    };
-
-    const handleBookingNavigate = () => {
-        let booking = {
-            guestId: user.id,
-            listingId:listing.id,
-            description : listing.description,
-            amount:totalAfterTax,
-            checkInDate:fromDate,
-            checkOutDate:toDate,
-            totalNights: nights,
-            destination : {
-                country : listing.property.location.country,
-                city : listing.property.location.city
-            }
-        };
-        localStorage.setItem("booking", JSON.stringify(booking));
-        navigate(`/booking/${listing.id}`);
-    };
-
-    const handleFromDateChange = (e) => {
-        const date = e.target.value;
-        setFromDate(date);
-        if (toDate) {
-            calculateNights(date, toDate);
-        }
-    };
-
-    const handleToDateChange = (e) => {
-        const date = e.target.value;
-        setToDate(date);
-        if (fromDate) {
-            calculateNights(fromDate, date);
-        }
-    };
-
-    const calculateNights = (from, to) => {
-        const fromDate = new Date(from);
-        const toDate = new Date(to);
-        const differenceInTime = toDate - fromDate;
-        const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
-        setNights(differenceInDays > 0 ? differenceInDays : 1);
-    };
-
-    return (
-        <div className="row" style={{
-            maxHeight: "fit-content",
-            borderRadius: 10,
-            boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
-            padding: 20,
-            width: "400px",
-            opacity : listing.isAvailable ? "1" : "0.3"
-        }}>
-            <div className="row">
-                <div className="col-xl-12">
-                    <h3 className="d-inline-block">{listing.price}</h3>
-                    <p className="d-inline-block"> $ per night</p>
-                </div>
-            </div>
-
-            <div className="row mt-1 mb-3">
-                <div className="col-xl-6">
-                    <label htmlFor="fromDate">From:</label>
-                    <input type="date" id="fromDate" className="form-control" onChange={handleFromDateChange} />
-                </div>
-                <div className="col-xl-6">
-                    <label htmlFor="toDate">To:</label>
-                    <input type="date" id="toDate" className="form-control" onChange={handleToDateChange} />
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-xl-12">
-                    <label htmlFor="nights">Total nights:</label>
-                    <input type="number" id="nights" value={nights} className="form-control" />
-                </div>
-            </div>
-            <div className="row mt-4">
-                <p><b>Total before tax: $</b>{totalBeforeTax.toFixed(2)}</p>
-            </div>
-            <div className="row">
-                <p><b>Tax: $</b>{taxAmount.toFixed(2)}</p>
-            </div>
-            <div className="row">
-                <p><b>Total after tax: $</b>{totalAfterTax.toFixed(2)}</p>
-            </div>
-            <div className="row">
-                <button className="btn" style={{ backgroundColor: "#ff385c", color: "white", fontWeight: "bold" }} onClick={handleBookingNavigate} disabled={!listing.isAvailable}>Book Now</button>
-            </div>
-        </div>
-    );
-};
