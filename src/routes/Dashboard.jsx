@@ -8,8 +8,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 import LogoutIcon from '@mui/icons-material/Logout';
-import {LineChart} from "@mui/x-charts";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export function Dashboard(){
     const user = JSON.parse(localStorage.getItem("user"));
@@ -103,45 +103,23 @@ export function Dashboard(){
                 padding:20,
                 height:"200px",
                 margin:10,
-            borderRadius:10,
-            boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
     }}>
                 <div className="row">
                     <h2>New Booking</h2>
                 </div>
                 <div className="row align-items-end">
                     <div className="col-xl-8">
-                      <h1 style={{
+                      <h2 style={{
                         fontWeight:"bold",
                         color:"black"
-                      }}>20</h1>
+                      }}>20</h2>
                     </div>
                     <div className="col-xl-3">
-                        <a href="">Details</a>
+                        <a href="" style={{
+                        textDecoration : "none",
+                        color:"#ff385c"
+                       }}>Details</a>
                     </div>
-                </div>
-            </div>
-        )
-    }
-    function BookingAnalytics(){
-        return(
-            <div className="col-xl-11">
-                <div className="row">
-                    <h2>Booking Statistics</h2>
-                </div>
-                <div className="row">
-                <LineChart
-  xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-  series={[
-    {
-      data: [2, -5.5, 2, -7.5, 1.5, 6],
-      area: true,
-      baseline: 'min',
-    },
-  ]}
-  width={1000}
-  height={200}
-/>
                 </div>
             </div>
         )
@@ -152,8 +130,6 @@ export function Dashboard(){
                 padding:20,
                 height:"200px",
                 margin:10,
-            borderRadius:10,
-            boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
     }}>
                 <div className="row">
                     <h2>Total Booking</h2>
@@ -166,7 +142,10 @@ export function Dashboard(){
                       }}>20/100</h3>
                     </div>
                     <div className="col-xl-3">
-                       <a href="">Details</a>
+                       <a href="" style={{
+                        textDecoration : "none",
+                        color:"#ff385c"
+                       }}>Details</a>
                     </div>
                 </div>
             </div>
@@ -178,8 +157,6 @@ export function Dashboard(){
                 padding:20,
                 height:"200px",
                 margin:10,
-            borderRadius:10,
-            boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
     }}>
                 <div className="row">
                     <h2>Total Revenue</h2>
@@ -192,7 +169,10 @@ export function Dashboard(){
                       }}>23.900 $</h3>
                     </div>
                     <div className="col-xl-3">
-                       <a href="">Details</a>
+                       <a href="" style={{
+                        textDecoration : "none",
+                        color:"#ff385c"
+                       }}>Details</a>
                     </div>
                 </div>
             </div>
@@ -218,6 +198,14 @@ export function Dashboard(){
         )
     }
     function BookingHistory(){
+        const [booking,setBooking] = useState([]);
+        useEffect(()=>{
+            try{
+                let req = axios.get(`http://localhost:8080/api/analytics/booking/${}`)
+            }catch(err){
+
+            }
+        },[])
         return(
             <div className="row">
                 
