@@ -1,8 +1,11 @@
 package com.softwareengineering.ebooking.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 
 @Entity
 @Setter
@@ -39,6 +42,9 @@ public class Listing {
 
     @Column(name = "is_available")
     private Boolean isAvailable;
+
+    @Column(name = "available_from")
+    private Date availableFrom;
 
     @Column(name = "review")
     private Integer stars;

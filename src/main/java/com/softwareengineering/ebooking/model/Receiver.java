@@ -1,6 +1,5 @@
 package com.softwareengineering.ebooking.model;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,13 +7,12 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Sender{
+public class Receiver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer senderId;
+    Integer receiverId;
 
     @OneToOne
-    @JoinColumn(name = "senderId")
+    @JoinColumn(name = "user")
     User user;
-
 }

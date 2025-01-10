@@ -4,19 +4,10 @@ import com.softwareengineering.ebooking.dto.BookingDto;
 import com.softwareengineering.ebooking.model.*;
 import com.softwareengineering.ebooking.repository.*;
 import com.softwareengineering.ebooking.service.host.HostService;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Properties;
 
 @Service
 public class BookingService {
