@@ -5,16 +5,14 @@ import com.softwareengineering.ebooking.dto.MessageDto;
 import com.softwareengineering.ebooking.dto.SendMessageDto;
 import com.softwareengineering.ebooking.exception.DiscussionAlreadyExistsException;
 import com.softwareengineering.ebooking.model.*;
-import com.softwareengineering.ebooking.repository.DiscussionRepository;
-import com.softwareengineering.ebooking.repository.MessageRepository;
-import com.softwareengineering.ebooking.repository.ReceiverRepository;
-import com.softwareengineering.ebooking.repository.SenderRepository;
+import com.softwareengineering.ebooking.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -24,11 +22,13 @@ public class ChatService {
     private final DiscussionRepository discussionRepository;
     private final ReceiverRepository receiverRepository;
     private final MessageRepository messageRepository;
-    public ChatService(SenderRepository senderRepository, DiscussionRepository discussionRepository, ReceiverRepository receiverRepository, MessageRepository messageRepository) {
+    private final UserRepository userRepository;
+    public ChatService(SenderRepository senderRepository, DiscussionRepository discussionRepository, ReceiverRepository receiverRepository, MessageRepository messageRepository, UserRepository userRepository) {
         this.senderRepository = senderRepository;
         this.discussionRepository = discussionRepository;
         this.receiverRepository = receiverRepository;
         this.messageRepository = messageRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -40,9 +40,15 @@ public class ChatService {
         Sender sender = senderRepository.findById(senderId).get();
         Receiver receiver = receiverRepository.findById(receiverId).get();
         */
-        List<Integer> users = new ArrayList<>();
-        users.add(discussionDto.getUserIds().get(0));
-        users.add(discussionDto.getUserIds().get(1));
+        List<Integer> userIds = new ArrayList<>();
+        userIds.add(discussionDto.getUserIds().get(0));
+        userIds.add(discussionDto.getUserIds().get(1));
+        List<User> users = userIds
+                .stream()
+                .map(userId->{
+                    User user = userRepository.findById(userId).get();
+                    return user;
+                }).collect(Collectors.toList());
         boolean discussionExists = discussionRepository.existsByUsers(
                 users
         );
@@ -54,7 +60,9 @@ public class ChatService {
                 discussion.setUsers(users);
                 discussionRepository.save(discussion);
             }
-            discussionDto.setUsers(users);
+            discussionDto.setUsers(users.forEach(user -> {
+                return user.getId();
+            }));
             return new ResponseEntity<>(discussionDto,
                     HttpStatus.OK);
         }catch(DiscussionAlreadyExistsException e){
