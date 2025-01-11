@@ -15,7 +15,7 @@ public class Discussion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer discussionId;
 
-    @OneToMany(mappedBy = "message")
+    @OneToMany
     @JoinColumn(name = "messages")
     List<Message> message;
 

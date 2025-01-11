@@ -2,6 +2,7 @@ package com.softwareengineering.ebooking.service;
 
 import com.softwareengineering.ebooking.dto.DiscussionDto;
 import com.softwareengineering.ebooking.dto.MessageDto;
+import com.softwareengineering.ebooking.dto.SendMessageDto;
 import com.softwareengineering.ebooking.exception.DiscussionAlreadyExistsException;
 import com.softwareengineering.ebooking.model.*;
 import com.softwareengineering.ebooking.repository.DiscussionRepository;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ChatService {
@@ -32,25 +33,29 @@ public class ChatService {
 
 
     // Create first discussion between two users:
-    public ResponseEntity<Object> createDiscussion(
-            Integer senderId,
-            Integer receiverId
+    public ResponseEntity<DiscussionDto> createDiscussion(
+            DiscussionDto discussionDto
     ){
+        /*
         Sender sender = senderRepository.findById(senderId).get();
         Receiver receiver = receiverRepository.findById(receiverId).get();
-        List<User> users = new ArrayList<>();
-        users.add(sender.getUser());
-        users.add(receiver.getUser());
+        */
+        List<Integer> users = new ArrayList<>();
+        users.add(discussionDto.getUserIds().get(0));
+        users.add(discussionDto.getUserIds().get(1));
         boolean discussionExists = discussionRepository.existsByUsers(
                 users
         );
         try {
+
+            // Check if the discussion already exists:
             if (!discussionExists){
                 Discussion discussion = new Discussion();
                 discussion.setUsers(users);
                 discussionRepository.save(discussion);
             }
-            return new ResponseEntity<>("Discussion Created!!",
+            discussionDto.setUsers(users);
+            return new ResponseEntity<>(discussionDto,
                     HttpStatus.OK);
         }catch(DiscussionAlreadyExistsException e){
             throw new DiscussionAlreadyExistsException();
@@ -58,17 +63,16 @@ public class ChatService {
     }
 
     public ResponseEntity<Object> sendMessage(
-            Integer discussionId,
-            MessageDto messageDto
+            SendMessageDto sendMessageDto
     ){
-        Discussion discussion = discussionRepository.findById(discussionId).get();
+        Discussion discussion = discussionRepository.findById(sendMessageDto.getDiscussionId()).get();
         Message message = new Message();
-        Sender sender = senderRepository.findById(messageDto.getSenderId()).get();
-        Receiver receiver = receiverRepository.findById(messageDto.getReceiverId()).get();
+        Sender sender = senderRepository.findById(sendMessageDto.getMessageDto().getSenderId()).get();
+        Receiver receiver = receiverRepository.findById(sendMessageDto.getMessageDto().getReceiverId()).get();
         List<User> users = new ArrayList<>();
         users.add(sender.getUser());
         users.add(receiver.getUser());
-        message.setTextMessage(messageDto.getText());
+        message.setTextMessage(sendMessageDto.getMessageDto().getText());
         message.setSender(sender);
         message.setReceiver(receiver);
         discussion.setUsers(users);
@@ -84,9 +88,9 @@ public class ChatService {
 
         Sender sender = senderRepository.findById(senderId).get();
         Receiver receiver = receiverRepository.findById(receiverId).get();
-        List<User> users = new ArrayList<>();
-        users.add(sender.getUser());
-        users.add(receiver.getUser());
+        List<Integer> users = new ArrayList<>();
+        users.add(sender.getUser().getId());
+        users.add(receiver.getUser().getId());
         Discussion discussion = discussionRepository.findByUsers(
                 users
         );
@@ -101,7 +105,7 @@ public class ChatService {
                             messageDto.setReceiverId(message.getReceiver().getReceiverId());
                             return messageDto;
                         }).toList();
-        discussionDto.setUsers(users);
+        discussionDto.setUserIds(users);
         discussionDto.setMessageDtoList(messageDtoList);
         return new ResponseEntity<>(discussionDto,HttpStatus.OK);
     }

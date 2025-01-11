@@ -1,29 +1,26 @@
 package com.softwareengineering.ebooking.jwt;
 
-import com.softwareengineering.ebooking.model.Roles;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
-import java.util.List;
 import java.util.function.Function;
 
 @Slf4j
 @Component
 public class JwtUtilities {
+    // Secret key:
     private final String secret = "385e7e7bf9074b975ccfb147a035696893be210c823250bf824cf61538176eda";
     private Long jwtExpiration = 36000000L;
 
     public String extractUserName(String token){
         return extractClaim(token, Claims::getSubject);
     }
-
     private <T> T extractClaim(String token, Function<Claims,T> claimsTFunction) {
         final Claims claims = extractAllClaims(token);
         return claimsTFunction.apply(claims);
@@ -37,7 +34,9 @@ public class JwtUtilities {
     public Date extractExpiration(String token) { return
             extractClaim(token, Claims::getExpiration);
     }
-    public Boolean validateToken(String token, UserDetails userDetails) { final String email = extractUserName(token);
+
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        final String email = extractUserName(token);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 

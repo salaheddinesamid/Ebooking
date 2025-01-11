@@ -40,6 +40,7 @@ public class SecurityConfiguration {
                                 "api/booking/**",
                                 "email/test/**",
                                 "/api/host/**",
+                                "api/chat/**",
                                 "api/listing/images/**",
                                 "/api/analytics/**").permitAll() // Public access
                          // Role-based access
