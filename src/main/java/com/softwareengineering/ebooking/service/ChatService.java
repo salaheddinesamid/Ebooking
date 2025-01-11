@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChatService {
@@ -90,6 +91,18 @@ public class ChatService {
                 users
         );
         DiscussionDto discussionDto = new DiscussionDto();
-
+        List<Message> messages = messageRepository.findAllBySenderAndReceiver(sender,receiver);
+        List<MessageDto> messageDtoList = messages
+                .stream()
+                        .map(message -> {
+                            MessageDto messageDto = new MessageDto();
+                            messageDto.setText(message.getTextMessage());
+                            messageDto.setSenderId(message.getSender().getSenderId());
+                            messageDto.setReceiverId(message.getReceiver().getReceiverId());
+                            return messageDto;
+                        }).toList();
+        discussionDto.setUsers(users);
+        discussionDto.setMessageDtoList(messageDtoList);
+        return new ResponseEntity<>(discussionDto,HttpStatus.OK);
     }
 }
