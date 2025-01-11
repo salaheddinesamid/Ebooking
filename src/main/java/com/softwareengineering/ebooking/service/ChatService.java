@@ -37,15 +37,16 @@ public class ChatService {
     ){
         Sender sender = senderRepository.findById(senderId).get();
         Receiver receiver = receiverRepository.findById(receiverId).get();
-        boolean discussionExists = discussionRepository.existsBySenderAndReceiver(
-                sender,
-                receiver
+        List<User> users = new ArrayList<>();
+        users.add(sender.getUser());
+        users.add(receiver.getUser());
+        boolean discussionExists = discussionRepository.existsByUsers(
+                users
         );
         try {
             if (!discussionExists){
                 Discussion discussion = new Discussion();
-                discussion.setSender(sender);
-                discussion.setReceiver(receiver);
+                discussion.setUsers(users);
                 discussionRepository.save(discussion);
             }
             return new ResponseEntity<>("Discussion Created!!",
@@ -82,9 +83,11 @@ public class ChatService {
 
         Sender sender = senderRepository.findById(senderId).get();
         Receiver receiver = receiverRepository.findById(receiverId).get();
-
-        Discussion discussion = discussionRepository.findBySenderAndReceiver(
-                sender, receiver
+        List<User> users = new ArrayList<>();
+        users.add(sender.getUser());
+        users.add(receiver.getUser());
+        Discussion discussion = discussionRepository.findByUsers(
+                users
         );
 
     }
