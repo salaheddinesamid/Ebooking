@@ -89,6 +89,7 @@ public class ChatService {
         Discussion discussion = discussionRepository.findByUsers(
                 users
         );
+        DiscussionDto discussionDto = new DiscussionDto();
 
     }
 }

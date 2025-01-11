@@ -1,8 +1,7 @@
 package com.softwareengineering.ebooking.repository;
 
 import com.softwareengineering.ebooking.model.Discussion;
-import com.softwareengineering.ebooking.model.Receiver;
-import com.softwareengineering.ebooking.model.Sender;
+
 import com.softwareengineering.ebooking.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
