@@ -13,13 +13,11 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer messageId;
 
-    @OneToOne
-    @JoinColumn(name = "sender")
-    Sender sender;
+    @Column(name = "sender")
+    Integer senderId;
 
-    @OneToOne
-    @JoinColumn(name = "receiver")
-    Receiver receiver;
+    @Column(name = "receiver")
+    Integer receiverId;
 
     @Column(name = "text_message")
     String textMessage;

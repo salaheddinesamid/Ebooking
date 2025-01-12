@@ -6,10 +6,10 @@ import com.softwareengineering.ebooking.dto.SendMessageDto;
 import com.softwareengineering.ebooking.exception.DiscussionAlreadyExistsException;
 import com.softwareengineering.ebooking.model.*;
 import com.softwareengineering.ebooking.repository.*;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,72 +18,47 @@ import java.util.stream.Collectors;
 @Service
 public class ChatService {
 
-    private final SenderRepository senderRepository;
-    private final DiscussionRepository discussionRepository;
-    private final ReceiverRepository receiverRepository;
+
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
-    public ChatService(SenderRepository senderRepository, DiscussionRepository discussionRepository, ReceiverRepository receiverRepository, MessageRepository messageRepository, UserRepository userRepository) {
-        this.senderRepository = senderRepository;
-        this.discussionRepository = discussionRepository;
-        this.receiverRepository = receiverRepository;
+    public ChatService(MessageRepository messageRepository, UserRepository userRepository) {
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
     }
 
 
     // Create first discussion between two users:
-    public ResponseEntity<DiscussionDto> createDiscussion(
-            DiscussionDto discussionDto
-    ){
-        /*
-        Sender sender = senderRepository.findById(senderId).get();
-        Receiver receiver = receiverRepository.findById(receiverId).get();
-        */
-        List<Integer> userIds = new ArrayList<>();
-        userIds.add(discussionDto.getUserIds().get(0));
-        userIds.add(discussionDto.getUserIds().get(1));
-        List<User> users = userIds
-                .stream()
-                .map(userId->{
-                    User user = userRepository.findById(userId).get();
-                    return user;
-                }).collect(Collectors.toList());
-        boolean discussionExists = discussionRepository.existsByUsers(
-                users
-        );
-        try {
+    public ResponseEntity<DiscussionDto> createDiscussion(DiscussionDto discussionDto) {
+        List<Integer> userIds = discussionDto.getUserIds();
 
-            // Check if the discussion already exists:
-            if (!discussionExists){
-                Discussion discussion = new Discussion();
-                discussion.setUsers(users);
-                discussionRepository.save(discussion);
-            }
-            discussionDto.setUsers(users.forEach(user -> {
-                return user.getId();
-            }));
-            return new ResponseEntity<>(discussionDto,
-                    HttpStatus.OK);
-        }catch(DiscussionAlreadyExistsException e){
-            throw new DiscussionAlreadyExistsException();
-        }
+        // Fetch users from the repository
+        List<User> users = userIds.stream()
+                .map(userId -> {
+                    try {
+                        return userRepository.findById(userId)
+                                .orElseThrow(() -> new ChangeSetPersister.NotFoundException());
+                    } catch (ChangeSetPersister.NotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
+
+        // Set response DTO
+        DiscussionDto responseDto = new DiscussionDto();
+        responseDto.setUserIds(userIds);
+
+        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
+
 
     public ResponseEntity<Object> sendMessage(
             SendMessageDto sendMessageDto
     ){
-        Discussion discussion = discussionRepository.findById(sendMessageDto.getDiscussionId()).get();
+        //Discussion discussion = discussionRepository.findById(sendMessageDto.getDiscussionId()).get();
         Message message = new Message();
-        Sender sender = senderRepository.findById(sendMessageDto.getMessageDto().getSenderId()).get();
-        Receiver receiver = receiverRepository.findById(sendMessageDto.getMessageDto().getReceiverId()).get();
-        List<User> users = new ArrayList<>();
-        users.add(sender.getUser());
-        users.add(receiver.getUser());
+        message.setSenderId(sendMessageDto.getMessageDto().getSenderId());
+        message.setReceiverId(sendMessageDto.getMessageDto().getReceiverId());
         message.setTextMessage(sendMessageDto.getMessageDto().getText());
-        message.setSender(sender);
-        message.setReceiver(receiver);
-        discussion.setUsers(users);
         messageRepository.save(message);
         return new ResponseEntity<>("Message sent", HttpStatus.OK);
     }
@@ -94,26 +69,17 @@ public class ChatService {
             Integer receiverId
     ){
 
-        Sender sender = senderRepository.findById(senderId).get();
-        Receiver receiver = receiverRepository.findById(receiverId).get();
-        List<Integer> users = new ArrayList<>();
-        users.add(sender.getUser().getId());
-        users.add(receiver.getUser().getId());
-        Discussion discussion = discussionRepository.findByUsers(
-                users
-        );
         DiscussionDto discussionDto = new DiscussionDto();
-        List<Message> messages = messageRepository.findAllBySenderAndReceiver(sender,receiver);
+        List<Message> messages = messageRepository.findAllBySenderIdAndReceiverId(senderId,receiverId);
         List<MessageDto> messageDtoList = messages
                 .stream()
                         .map(message -> {
                             MessageDto messageDto = new MessageDto();
                             messageDto.setText(message.getTextMessage());
-                            messageDto.setSenderId(message.getSender().getSenderId());
-                            messageDto.setReceiverId(message.getReceiver().getReceiverId());
+                            messageDto.setSenderId(message.getSenderId());
+                            messageDto.setReceiverId(message.getReceiverId());
                             return messageDto;
                         }).toList();
-        discussionDto.setUserIds(users);
         discussionDto.setMessageDtoList(messageDtoList);
         return new ResponseEntity<>(discussionDto,HttpStatus.OK);
     }

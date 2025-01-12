@@ -1,13 +1,11 @@
 package com.softwareengineering.ebooking.controller;
 
 import com.softwareengineering.ebooking.dto.DiscussionDto;
+import com.softwareengineering.ebooking.dto.DiscussionRequestDto;
 import com.softwareengineering.ebooking.dto.SendMessageDto;
 import com.softwareengineering.ebooking.service.ChatService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/chat")
@@ -31,5 +29,16 @@ public class ChatController {
             @RequestBody SendMessageDto sendMessageDto
             ){
         return chatService.sendMessage(sendMessageDto);
+    }
+
+    @GetMapping("/get_discussion/")
+    public ResponseEntity<DiscussionDto> getDiscussion(
+            @RequestParam Integer userId1,
+            @RequestParam Integer userId2
+            ){
+        return chatService.getDiscussion(
+                userId1,
+                userId2
+        );
     }
 }
