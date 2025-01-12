@@ -70,7 +70,7 @@ public class ChatService {
     ){
 
         DiscussionDto discussionDto = new DiscussionDto();
-        List<Message> messages = messageRepository.findAllBySenderIdAndReceiverId(senderId,receiverId);
+        List<Message> messages = messageRepository.findAllBySenderIdAndReceiverIdOrReceiverIdAndSenderId(senderId,receiverId,receiverId,senderId);
         List<MessageDto> messageDtoList = messages
                 .stream()
                         .map(message -> {
