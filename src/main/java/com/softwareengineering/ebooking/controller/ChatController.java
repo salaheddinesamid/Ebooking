@@ -1,7 +1,6 @@
 package com.softwareengineering.ebooking.controller;
 
 import com.softwareengineering.ebooking.dto.DiscussionDto;
-import com.softwareengineering.ebooking.dto.DiscussionRequestDto;
 import com.softwareengineering.ebooking.dto.SendMessageDto;
 import com.softwareengineering.ebooking.service.ChatService;
 import org.springframework.http.ResponseEntity;

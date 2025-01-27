@@ -3,14 +3,12 @@ package com.softwareengineering.ebooking.service;
 import com.softwareengineering.ebooking.dto.DiscussionDto;
 import com.softwareengineering.ebooking.dto.MessageDto;
 import com.softwareengineering.ebooking.dto.SendMessageDto;
-import com.softwareengineering.ebooking.exception.DiscussionAlreadyExistsException;
 import com.softwareengineering.ebooking.model.*;
 import com.softwareengineering.ebooking.repository.*;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
